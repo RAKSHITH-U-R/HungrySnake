@@ -1,2 +1,4 @@
 # HungrySnake
-To Run : https://helpful-cajeta-250bcd.netlify.app
+To Run :  https://mellifluous-druid-56c33b.netlify.app
+
+
