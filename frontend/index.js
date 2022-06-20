@@ -3,7 +3,6 @@ const SNAKE_COLOUR = '#c2c2c2';
 const FOOD_COLOUR = '#e66916';
 
 const socket = io('https://sleepy-island-33889.herokuapp.com/');
-// const socket = io('https://stark-dawn-30225.herokuapp.com/');
 
 socket.on('init', handleInit);
 socket.on('gameState', handleGameState);
@@ -24,14 +23,14 @@ joinGameBtn.addEventListener('click', joinGame);
 
 
 function newGame() {
-  socket.emit('newGame');
-  init();
+    socket.emit('newGame');
+    init();
 }
 
 function joinGame() {
-  const code = gameCodeInput.value;
-  socket.emit('joinGame', code);
-  init();
+    const code = gameCodeInput.value;
+    socket.emit('joinGame', code);
+    init();
 }
 
 let canvas, ctx;
@@ -39,95 +38,93 @@ let playerNumber;
 let gameActive = false;
 
 function init() {
-  initialScreen.style.display = "none";
-  gameScreen.style.display = "block";
+    initialScreen.style.display = "none";
+    gameScreen.style.display = "block";
 
-  canvas = document.getElementById('canvas');
-  ctx = canvas.getContext('2d');
+    canvas = document.getElementById('canvas');
+    ctx = canvas.getContext('2d');
 
-  canvas.width = 600;
-  canvas.height = 600;
+    canvas.width = canvas.height = 600;
 
-  ctx.fillStyle = BG_COLOUR;
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = BG_COLOUR;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  document.addEventListener('keydown', keydown);
-  gameActive = true;
+    document.addEventListener('keydown', keydown);
+    gameActive = true;
 }
 
 function keydown(e) {
-  socket.emit('keydown', e.keyCode);
+    socket.emit('keydown', e.keyCode);
 }
 
 function paintGame(state) {
-  ctx.fillStyle = BG_COLOUR;
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = BG_COLOUR;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  const food = state.food;
-  const gridsize = state.gridsize;
-  const size = canvas.width / gridsize;
+    const food = state.food;
+    const gridsize = state.gridsize;
+    const size = canvas.width / gridsize;
 
-  ctx.fillStyle = FOOD_COLOUR;
-  ctx.fillRect(food.x * size, food.y * size, size, size);
+    ctx.fillStyle = FOOD_COLOUR;
+    ctx.fillRect(food.x * size, food.y * size, size, size);
 
-  paintPlayer(state.players[0], size, SNAKE_COLOUR);
-  paintPlayer(state.players[1], size, 'red');
+    paintPlayer(state.players[0], size, SNAKE_COLOUR);
+    paintPlayer(state.players[1], size, 'red');
 }
 
 function paintPlayer(playerState, size, colour) {
-  const snake = playerState.snake;
+    const snake = playerState.snake;
 
-  ctx.fillStyle = colour;
-  for (let cell of snake) {
-    ctx.fillRect(cell.x * size, cell.y * size, size, size);
-  }
+    ctx.fillStyle = colour;
+    for (let cell of snake) {
+        ctx.fillRect(cell.x * size, cell.y * size, size, size);
+    }
 }
 
 function handleInit(number) {
-  playerNumber = number;
+    playerNumber = number;
 }
 
 function handleGameState(gameState) {
-  if (!gameActive) {
-    return;
-  }
-  gameState = JSON.parse(gameState);
-  requestAnimationFrame(() => paintGame(gameState));
+    if (!gameActive) {
+        return;
+    }
+    gameState = JSON.parse(gameState);
+    requestAnimationFrame(() => paintGame(gameState));
 }
 
 function handleGameOver(data) {
-  if (!gameActive) {
-    return;
-  }
-  data = JSON.parse(data);
+    if (!gameActive) {
+        return;
+    }
+    data = JSON.parse(data);
 
-  gameActive = false;
+    gameActive = false;
 
-  if (data.winner === playerNumber) {
-    alert('You Win!');
-  } else {
-    alert('You Lose :(');
-  }
+    if (data.winner === playerNumber) {
+        alert('You Win!');
+    } else {
+        alert('You Lose :(');
+    }
 }
 
 function handleGameCode(gameCode) {
-  console.log(gameCode);
-  gameCodeDisplay.innerText = gameCode;
+    gameCodeDisplay.innerText = gameCode;
 }
 
 function handleUnknownCode() {
-  reset();
-  alert('Unknown Game Code')
+    reset();
+    alert('Unknown Game Code')
 }
 
 function handleTooManyPlayers() {
-  reset();
-  alert('This game is already in progress');
+    reset();
+    alert('This game is already in progress');
 }
 
 function reset() {
-  playerNumber = null;
-  gameCodeInput.value = '';
-  initialScreen.style.display = "block";
-  gameScreen.style.display = "none";
+    playerNumber = null;
+    gameCodeInput.value = '';
+    initialScreen.style.display = "block";
+    gameScreen.style.display = "none";
 }
