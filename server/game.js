@@ -110,7 +110,7 @@ function gameLoop(state) {
 }
 
 function randomFood(state) {
-  food = {
+  let food = {
     x: Math.floor(Math.random() * GRID_SIZE),
     y: Math.floor(Math.random() * GRID_SIZE),
   }
